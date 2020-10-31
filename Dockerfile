@@ -14,6 +14,7 @@ RUN apk -U upgrade && \
     ln -s /dev/stderr /var/log/nginx/error.log && \
     ln -s /dev/stdout /var/log/supervisord.log && \
     sed -i "s|;nodaemon=false.*|nodaemon=true|i" /etc/supervisord.conf && \
+    sed -i "s|;pidfile=/run/supervisord.pid.*|pidfile=/run/supervisord.pid|i" /etc/supervisord.conf && \
     sed -i "s|;logfile_maxbytes=50MB.*|logfile_maxbytes=0|i" /etc/supervisord.conf && \
     sed -i "s|;logfile_backups=10*|logfile_backups=0|i" /etc/supervisord.conf && \
     sed -i "s|;user=chrism.*|user=root|i" /etc/supervisord.conf && \
