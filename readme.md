@@ -5,7 +5,7 @@ PHP, NGINX webstack docker container based on Alpine Linux.
 ## Running a php website
 Running a php website with current directory as the document root, on port 8080
 ```
-docker run -it --rm --name laravel -v $(pwd):/app -p 8080:8080 frengky/webstack
+docker run -it --rm --name web -v $(pwd):/app -p 8080:8080 frengky/webstack
 ```
 
 ## Running a Laravel application
