@@ -1,5 +1,5 @@
 [program:php-fpm]
-command=/usr/sbin/php-fpm7
+command=/usr/sbin/php-fpm7 -F
 process_name=%(program_name)s_%(process_num)02d
 priority=10
 numprocs=1
