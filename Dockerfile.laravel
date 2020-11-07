@@ -23,6 +23,8 @@ RUN apk -U upgrade && \
 
 COPY supervisor.d/nginx.tpl /etc/supervisor.d/
 COPY supervisor.d/php-fpm.tpl /etc/supervisor.d/
+COPY supervisor.d/crond.tpl /etc/supervisor.d/
+COPY supervisor.d/laravel-worker.tpl /etc/supervisor.d/
 COPY www.conf /etc/php7/php-fpm.d/
 COPY default.conf /etc/nginx/conf.d/
 
@@ -31,7 +33,7 @@ COPY default.conf /etc/nginx/conf.d/
 WORKDIR ${NGINX_ROOT}
 EXPOSE ${NGINX_PORT}
 
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint-laravel.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]

@@ -2,6 +2,16 @@
 
 PHP, NGINX webstack docker container based on Alpine Linux.
 
+| Tag  | Description |
+|---|---|
+| latest | For running common PHP website |
+| laravel | For running website using Laravel framework |
+
+## Getting started
+```
+docker pull frengky/webstack:<tag>
+```
+
 ## Running a php website
 Running a php website with current directory as the document root, on port 8080
 ```
@@ -21,17 +31,17 @@ LOG_CHANNEL=stderr
 
 Running the Laravel website with current directory as the Laravel source code, on port 8080
 ```
-docker run -it --rm --name laravel -v $(pwd):/app -p 8080:8080 -e LARAVEL=/app frengky/webstack
+docker run -it --rm --name laravel -v $(pwd):/app -p 8080:8080 frengky/webstack:laravel
 ```
 
 Optional with Laravel scheduler and 2 queue workers
 ```
-docker run -it --rm --name laravel -v $(pwd):/app -p 8080:8080 -e LARAVEL=/app -e LARAVEL_SCHEDULER=true -e LARAVEL_WORKER=2 frengky/webstack
+docker run -it --rm --name laravel -v $(pwd):/app -p 8080:8080 -e LARAVEL_SCHEDULER=true -e LARAVEL_WORKER=2 frengky/webstack:laravel
 ```
 
 Access Laravel's artisan command
 ```
-docker run -it --rm --name laravel -v $(pwd):/app frengky/webstack php artisan route:list
+docker run -it --rm --name laravel -v $(pwd):/app frengky/webstack:laravel php artisan route:list
 ```
 
 Using docker compose
