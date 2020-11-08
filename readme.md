@@ -18,6 +18,12 @@ Running a php website with current directory as the document root, on port 8080
 docker run -it --rm --name web -v $(pwd):/app -p 8080:8080 frengky/webstack
 ```
 
+### Customisable environment variables
+| Name | Default | Description |
+|---|---|---|
+| MAIL_HOST | mailserver | Mail server host |
+| MAIL_PORT | 3025 | Mail server port |
+
 ## Running a Laravel application
 Create a new Laravel project using composer in the current directory
 ```
@@ -47,9 +53,8 @@ docker run -it --rm --name laravel -v $(pwd):/app frengky/webstack:laravel php a
 Using docker compose
 ```
 laravel-app:
-    image: frengky/webstack
+    image: frengky/webstack:laravel
     environment:
-        LARAVEL: /app
         LARAVEL_SCHEDULER: true
         LARAVEL_WORKER: 2
     ports:
@@ -58,12 +63,10 @@ laravel-app:
         - ".:/app"
 ```
 
-## Customisable environment variables
+### Customisable environment variables
 | Name | Default | Description |
 |---|---|---|
-| NGINX_PORT | 8080 | Nginx EXPOSE port |
-| NGINX_ROOT | /app | Web document root |
-| SENDMAIL_PATH | /usr/sbin/sendmail -S mailserver:3025 -t -i | PHP sendmail_path value |
-| LARAVEL | /app | Enable Laravel app support with source code directory at /app |
+| MAIL_HOST | mailserver | Mail server host |
+| MAIL_PORT | 3025 | Mail server port |
 | LARAVEL_SCHEDULER | false | Enable Laravel scheduler running on cron |
-| LARAVEL_WORKER | 0 | Enable Laravel queue workers (integers) |
+| LARAVEL_WORKER | 0 | Enable Laravel queue workers (int) |
