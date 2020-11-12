@@ -18,6 +18,11 @@ xdebug.remote_port=9000\n\
 xdebug.remote_connect_back=0\n\
 xdebug.remote_autostart=1\n" > /etc/php7/conf.d/xdebug.ini
 
+    # Increase overall request processing time
+    sed -i "/fastcgi_param SERVER_NAME*/a\ \ \ \ \ \ \ \ fastcgi_read_timeout 600s;\n\ \ \ \ \ \ \ \ fastcgi_send_timeout 600s;" /etc/nginx/conf.d/default.conf
+    sed -i "/client_max_body_size*/a\ \ \ \ client_header_timeout 600s;\n\ \ \ \ client_body_timeout 600s;" /etc/nginx/conf.d/default.conf
+    sed -i "s|php_admin_value\[max_execution_time\].*|php_admin_value\[max_execution_time\]\ =\ 600|i" /etc/php7/php-fpm.d/www.conf
+
 fi
 
 exec "$@"
