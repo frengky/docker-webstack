@@ -1,13 +1,11 @@
 FROM frengky/php
 LABEL maintainer="frengky.lim@gmail.com"
 
-ARG LARAVEL_ROOT=/app
 ARG NGINX_PORT=8080
-ARG NGINX_ROOT=/app/public
+ARG NGINX_ROOT=/app
 
 ENV NGINX_PORT ${NGINX_PORT}
 ENV NGINX_ROOT ${NGINX_ROOT}
-ENV LARAVEL_ROOT ${LARAVEL_ROOT}
 
 RUN apk -U upgrade && \
     apk --update --no-cache add \
@@ -27,10 +25,23 @@ RUN apk -U upgrade && \
     sed -i "s|;silent=false.*|silent=true|i" /etc/supervisord.conf && \
     rm -f /var/cache/apk/*
 
+RUN apk --update --no-cache add \
+    curl \
+    php7-pecl-xdebug \
+    python2 && \
+    sed -i "s|;*zend_extension=.*|zend_extension=xdebug.so|i" /etc/php7/conf.d/xdebug.ini && \
+    echo -en 'xdebug.remote_enable=1\nxdebug.remote_host=127.0.0.1\nxdebug.remote_port=9010\nxdebug.remote_connect_back=0\nxdebug.remote_autostart=1\n' >> /etc/php7/conf.d/xdebug.ini && \
+     # https://code.activestate.com/komodo/remotedebugging/
+    mkdir /pydbgpproxy && \
+    curl -sSL http://downloads.activestate.com/Komodo/releases/12.0.1/remotedebugging/Komodo-PythonRemoteDebugging-12.0.1-91869-linux-x86_64.tar.gz | tar x -z -f - --strip 1 -C /pydbgpproxy && \
+    ln -s /pydbgpproxy/pydbgpproxy /usr/local/bin/pydbgpproxy && \
+    apk del curl && \
+    rm -f /var/cache/apk/*
+ENV PYTHONPATH "$PYTHONPATH:/pydbgpproxy/pythonlib"
+COPY supervisor.d/pydbgpproxy.ini /etc/supervisor.d/
+
 COPY supervisor.d/nginx.ini /etc/supervisor.d/
 COPY supervisor.d/php-fpm.ini /etc/supervisor.d/
-COPY supervisor.d/crond.tpl /etc/supervisor.d/
-COPY supervisor.d/laravel-worker.tpl /etc/supervisor.d/
 COPY php/php-fpm.conf /etc/php7/
 COPY php/www.conf /etc/php7/php-fpm.d/
 COPY nginx/default.conf /etc/nginx/conf.d/
@@ -40,10 +51,10 @@ RUN sed -i "s|^\s*listen\s*.*|    listen ${NGINX_PORT} default_server;|" /etc/ng
 
 #HEALTHCHECK --interval=10s --timeout=3s CMD [ $(php -r "echo file_get_contents('http://localhost:'.\$_SERVER['NGINX_PORT'].'/ping');") == "pong" ] || exit 1
 
-WORKDIR ${LARAVEL_ROOT}
-EXPOSE ${NGINX_PORT}
+WORKDIR ${NGINX_ROOT}
+EXPOSE ${NGINX_PORT} 9011
 
-COPY scripts/docker-entrypoint-laravel.sh /usr/local/bin/docker-entrypoint.sh
+COPY scripts/docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
