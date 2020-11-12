@@ -6,6 +6,38 @@ This PHP-FPM Nginx container is based on Alpine Linux, a multiple service (php-f
 |---|---|
 | frengky/webstack | For running common PHP website |
 | frengky/webstack:laravel | For running website with Laravel framework |
+| frengky/webstack:xdebug | For running common PHP website (with XDebug) |
+| frengky/webstack:laravel-xdebug | For running website with Laravel framework (with XDebug) |
+
+> By default xdebug.remote_host is set to container host ip (auto detect), xdebug.remote_port=9000 and xdebug.remote_autostart=1
+
+To use XDebug variant, you need to install VSCode extension `PHP Debug`.
+If you are using Remote SSH, make sure the `PHP Debug` extension are installed on your remote too.
+And dont forget to adjust your `launch.json`:
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for XDebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9000,
+            "pathMappings": {
+                "/app": "${workspaceRoot}"
+            }
+        },
+        {
+            "name": "Launch currently open script",
+            "type": "php",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${fileDirname}",
+            "port": 9000
+        }
+    ]
+}
+```
 
 ## Running a php website
 Running a php website with current directory as the document root, on port `8080`

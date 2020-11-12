@@ -1,17 +1,16 @@
 FROM frengky/php
 LABEL maintainer="frengky.lim@gmail.com"
 
-ARG LARAVEL_ROOT=/app
 ARG NGINX_PORT=8080
-ARG NGINX_ROOT=/app/public
+ARG NGINX_ROOT=/app
 
 ENV NGINX_PORT ${NGINX_PORT}
 ENV NGINX_ROOT ${NGINX_ROOT}
-ENV LARAVEL_ROOT ${LARAVEL_ROOT}
 
 RUN apk -U upgrade && \
     apk --update --no-cache add \
     php7-fpm \
+    php7-pecl-xdebug \
     nginx \
     supervisor && \
     mkdir /run/nginx && \
@@ -29,8 +28,6 @@ RUN apk -U upgrade && \
 
 COPY supervisor.d/nginx.ini /etc/supervisor.d/
 COPY supervisor.d/php-fpm.ini /etc/supervisor.d/
-COPY supervisor.d/crond.tpl /etc/supervisor.d/
-COPY supervisor.d/laravel-worker.tpl /etc/supervisor.d/
 COPY php/php-fpm.conf /etc/php7/
 COPY php/www.conf /etc/php7/php-fpm.d/
 COPY nginx/default.conf /etc/nginx/conf.d/
@@ -40,10 +37,10 @@ RUN sed -i "s|^\s*listen\s*.*|    listen ${NGINX_PORT} default_server;|" /etc/ng
 
 #HEALTHCHECK --interval=10s --timeout=3s CMD [ $(php -r "echo file_get_contents('http://localhost:'.\$_SERVER['NGINX_PORT'].'/ping');") == "pong" ] || exit 1
 
-WORKDIR ${LARAVEL_ROOT}
+WORKDIR ${NGINX_ROOT}
 EXPOSE ${NGINX_PORT}
 
-COPY scripts/docker-entrypoint-laravel.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint-laravel.sh"]
+COPY scripts/docker-entrypoint-xdebug.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint-xdebug.sh"]
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
