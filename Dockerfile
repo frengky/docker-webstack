@@ -1,12 +1,6 @@
 FROM frengky/php
 LABEL maintainer="frengky.lim@gmail.com"
 
-ARG NGINX_PORT=8080
-ARG NGINX_ROOT=/app
-
-ENV NGINX_PORT ${NGINX_PORT}
-ENV NGINX_ROOT ${NGINX_ROOT}
-
 RUN apk -U upgrade && \
     apk --update --no-cache add \
     php7-fpm \
@@ -31,13 +25,8 @@ COPY php/php-fpm.conf /etc/php7/
 COPY php/www.conf /etc/php7/php-fpm.d/
 COPY nginx/default.conf /etc/nginx/conf.d/
 
-RUN sed -i "s|^\s*listen\s*.*|    listen ${NGINX_PORT} default_server;|" /etc/nginx/conf.d/default.conf && \
-    sed -i "s|^\s*root\s*.*|    root ${NGINX_ROOT};|" /etc/nginx/conf.d/default.conf
-
-#HEALTHCHECK --interval=10s --timeout=3s CMD [ $(php -r "echo file_get_contents('http://localhost:'.\$_SERVER['NGINX_PORT'].'/ping');") == "pong" ] || exit 1
-
-WORKDIR ${NGINX_ROOT}
-EXPOSE ${NGINX_PORT}
+WORKDIR /app
+EXPOSE 8080
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
