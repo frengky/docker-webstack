@@ -19,8 +19,8 @@ if [ "$1" = "supervisord" ]; then
 
     XDEBUG_IDE_HOST=$(ip r | awk '/default/{print $3}')
     printf "\
-; Uncomment to enable this extension.\
-zend_extension=xdebug.so\
+; Uncomment to enable this extension.\n\
+zend_extension=xdebug.so\n\
 xdebug.remote_enable=1\n\
 xdebug.remote_host=${XDEBUG_IDE_HOST}\n\
 xdebug.remote_port=9000\n\
