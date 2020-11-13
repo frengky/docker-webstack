@@ -7,7 +7,7 @@ if [ "$1" = "supervisord" ]; then
     SENDMAIL_PATH="/usr/sbin/sendmail -S ${MAIL_HOST}:${MAIL_PORT} -t -i"
 
     if [ "${LARAVEL_SCHEDULER:-false}" != "false" ]; then
-        echo "* * * * * cd ${LARAVEL_ROOT} && /usr/bin/php artisan schedule:run >> /dev/null 2>&1" | crontab -u app -
+        echo "* * * * * /usr/bin/php /app/artisan schedule:run >> /dev/null 2>&1" | crontab -u app -
         mv /etc/supervisor.d/crond.tpl /etc/supervisor.d/crond.ini
     fi
 
