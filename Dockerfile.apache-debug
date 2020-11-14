@@ -1,0 +1,19 @@
+FROM frengky/webstack:apache
+LABEL maintainer="frengky.lim@gmail.com"
+
+RUN apk --update --no-cache add \
+    php7-pecl-xdebug && \
+    sed -i "s|memory_limit =.*|memory_limit = -1|i" /etc/php7/php.ini && \
+    sed -i "s|max_execution_time =.*|max_execution_time = 600|i" /etc/php7/php.ini && \
+    sed -i "s|upload_max_filesize =.*|upload_max_filesize = 128M|i" /etc/php7/php.ini && \
+    sed -i "s|post_max_size =.*|post_max_size = 128M|i" /etc/php7/php.ini && \
+    rm -f /var/cache/apk/*
+
+WORKDIR /app
+EXPOSE 8080
+
+COPY apache2/httpd.conf /etc/apache2/
+COPY scripts/docker-entrypoint-apache.debug.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["httpd", "-D", "FOREGROUND"]

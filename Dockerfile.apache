@@ -1,0 +1,21 @@
+FROM frengky/php
+LABEL maintainer="frengky.lim@gmail.com"
+
+RUN \
+    apk --update --no-cache add \
+    apache2 php7-apache2 && \
+    ln -s /dev/stdout /var/log/apache2/access.log && \
+    ln -s /dev/stderr /var/log/apache2/error.log && \
+    rm -rf /var/www/localhost/cgi-bin && \
+    rm -f /usr/sbin/suexec && \
+    mv /etc/apache2/httpd.conf /etc/apache2/httpd.conf_orig && \
+    rm -f /var/cache/apk/*
+
+WORKDIR /app
+EXPOSE 8080
+
+COPY apache2/httpd.conf /etc/apache2/
+COPY scripts/docker-entrypoint-apache.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["httpd", "-D", "FOREGROUND"]
