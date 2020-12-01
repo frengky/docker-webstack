@@ -25,7 +25,7 @@ COPY supervisor.d/pydbgpproxy.ini /etc/supervisor.d/
 WORKDIR /app
 EXPOSE 8080 9011
 
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
+COPY scripts/docker-entrypoint.dbgp.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
