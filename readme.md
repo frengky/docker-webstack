@@ -12,6 +12,7 @@ This PHP-FPM Nginx container is based on Alpine Linux, a multiple service (php-f
 | frengky/webstack:apache-debug | For running website using Apache2 (with XDebug) |
 
 > By default `xdebug.remote_host` is set to container host ip (auto detect), `xdebug.remote_port=9000` and `xdebug.remote_autostart=1`
+> Other than Linux, manually set the `xdebug.remote_host` value with `-e XDEBUG_REMOTE_HOST=host.docker.internal`
 > If you wish to run a Laravel app using `apache` variant, set the environment `DOCUMENT_ROOT` to `/app/public`
 
 To use XDebug variant, you need to install VSCode extension `PHP Debug`.
