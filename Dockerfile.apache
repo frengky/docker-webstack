@@ -1,8 +1,7 @@
-FROM frengky/php
+FROM frengky/php:7
 LABEL maintainer="frengky.lim@gmail.com"
 
-RUN \
-    apk --update --no-cache add \
+RUN apk --update --no-cache add \
     apache2 php7-apache2 && \
     ln -s /dev/stdout /var/log/apache2/access.log && \
     ln -s /dev/stderr /var/log/apache2/error.log && \

@@ -1,8 +1,7 @@
-FROM frengky/php
+FROM frengky/php:7
 LABEL maintainer="frengky.lim@gmail.com"
 
-RUN apk -U upgrade && \
-    apk --update --no-cache add \
+RUN apk --update --no-cache add \
     php7-fpm \
     nginx \
     supervisor && \
