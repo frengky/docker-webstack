@@ -9,7 +9,6 @@ if [ "$1" = "supervisord" ]; then
     sed -i "s|;*sendmail_path =.*|sendmail_path=\"${SENDMAIL_PATH}\"|i" /etc/php7/php.ini
 
     printf "\
-; Uncomment to enable this extension.\n\
 zend_extension=xdebug.so\n\
 xdebug.remote_enable=1\n\
 xdebug.remote_host=127.0.0.1\n\
