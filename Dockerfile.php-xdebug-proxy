@@ -4,7 +4,6 @@ LABEL maintainer="frengky.lim@gmail.com"
 RUN apk --update --no-cache add \
     curl && \
     printf "\
-; Uncomment to enable this extension.\n\
 zend_extension=xdebug.so\n\
 xdebug.remote_enable=1\n\
 xdebug.remote_host=127.0.0.1\n\
@@ -25,6 +24,7 @@ ENV PATH "$PATH:/root/.composer/vendor/bin"
 COPY php-xdebug-proxy php-xdebug-proxy
 COPY supervisor.d/php-xdebug-proxy.ini /etc/supervisor.d/
 
+VOLUME /app
 WORKDIR /app
 EXPOSE 8080 9011
 

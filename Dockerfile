@@ -24,6 +24,7 @@ COPY php/php-fpm.conf /etc/php7/
 COPY php/www.conf /etc/php7/php-fpm.d/
 COPY nginx/default.conf /etc/nginx/conf.d/
 
+VOLUME /app
 WORKDIR /app
 EXPOSE 8080
 

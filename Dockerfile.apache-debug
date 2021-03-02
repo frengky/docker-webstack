@@ -9,6 +9,7 @@ RUN apk --update --no-cache add \
     sed -i "s|post_max_size =.*|post_max_size = 128M|i" /etc/php7/php.ini && \
     rm -f /var/cache/apk/*
 
+VOLUME /app
 WORKDIR /app
 EXPOSE 8080
 

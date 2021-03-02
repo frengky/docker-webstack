@@ -10,6 +10,7 @@ RUN apk --update --no-cache add \
     mv /etc/apache2/httpd.conf /etc/apache2/httpd.conf_orig && \
     rm -f /var/cache/apk/*
 
+VOLUME /app
 WORKDIR /app
 EXPOSE 8080
 
